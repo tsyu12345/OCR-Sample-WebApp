@@ -7,7 +7,7 @@ import requests
 from requests.models import Response
 import os
 
-from Interfaces import *
+from .Interfaces import *
 
 
 class RequestType(Enum):
