@@ -11,6 +11,7 @@ fastapi = "^0.104.0"
 uvicorn = "^0.23.2"
 easyocr = "^1.7.1"
 paddleocr = "^2.7.0.3"
+pydantic = "^2.4.2"
 
 
 [build-system]
