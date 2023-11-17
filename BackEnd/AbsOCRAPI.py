@@ -15,7 +15,7 @@ class AbsOCRAPI(metaclass = ABCMeta):
         pass
 
     @abstractmethod
-    def read_img(self, img: Image) -> None:
+    def read_img(self, img) -> None:
         """
         画像からOCRを行い、結果を返す
         Args:

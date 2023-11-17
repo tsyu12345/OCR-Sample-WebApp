@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Final as const, Any
+from typing import Final as const, Optional, Any
 
 from enum import Enum
 import json
@@ -30,12 +30,12 @@ class DXSuiteAPI:
     def __init__(self, auth: AuthData):
         self.auth: const[AuthData] = auth
         self.header = {
-            "apikey": self.auth["key"],
+            "apikey": self.auth.key,
         }
-        self.BASE_URL = f"https://{auth['domain']}.dx-suite.com/wf/api/standard/v2"
+        self.BASE_URL = f"https://{auth.domain}.dx-suite.com/wf/api/standard/v2"
 
 
-    def __request(self, method: RequestType, uri: str, body: dict=None) -> Response:
+    def __request(self, method: RequestType, uri: str, body: dict={}) -> Response:
         """_summary_
         リクエスト用補助関数
         Args:
@@ -70,7 +70,7 @@ class DXSuiteAPI:
 
 
 
-    def get_workflow_setting(self, workflowId: str, revision: int) -> WorkFlowSettingData:
+    def get_workflow_setting(self, workflowId: str, revision: int) -> WorkFlowSettingResponse:
         """_summary_
         ワークフロー設定取得API
         Args:
@@ -84,7 +84,7 @@ class DXSuiteAPI:
         response = self.__request(RequestType.GET, uri)
         data = response.json()
 
-        return WorkFlowSettingData(
+        return WorkFlowSettingResponse(
             workflowId=data["workflowId"],
             revision=data["revision"],
             applicationType=data["applicationType"],
@@ -113,7 +113,7 @@ class DXSuiteAPI:
         
         files: list[tuple] = []
 
-        for file in param["files"]:
+        for file in param.files:
             files.append(('files', (file, open(file, "rb"))))
         
         body = {
@@ -129,7 +129,7 @@ class DXSuiteAPI:
         )
     
 
-    def download_csv(self, unitId: str, save_path:str=None, overwrite:bool=False) -> Any:
+    def download_csv(self, unitId: str, save_path:str=None or "", overwrite:bool=False) -> Any:
         """_summary_
         CSVダウンロードAPI
         Args:
@@ -167,7 +167,7 @@ class DXSuiteAPI:
 
         #folderId, workflowId, unitIdのどれか1つのみ指定可能
         required_param = [param.folderId, param.workflowId, param.unitId]
-        if required_param.count(None) != 2:
+        if required_param.count(None or "") != 2:
             raise Exception("Only one of 'folderId', 'workflowId', or 'unitId' can be specified.")
 
         #Noneと空文字のパラメータは除外
@@ -199,7 +199,7 @@ class DXSuiteAPI:
         
         return result
             
-    def search_workflow(self, folderId: str=None, workflowName: str= None) -> list[SearchWokrFlowResponse]:
+    def search_workflow(self, folderId: Optional[str], workflowName: Optional[str]) -> list[SearchWokrFlowResponse]:
         """_summary_
         ワークフロー検索API\n
         Args:\n
@@ -265,20 +265,23 @@ if __name__ == "__main__":
     #print(csv)
     
 
-    param: RegisterPOST = {
-        "files": [
+    param = RegisterPOST(
+        files=[
             "./samples/DSC_0461.jpg",
             "./samples/DSC_0462.jpg",
-        ]
-    }
+        ],
+        unitName = None or "",
+        departmentId = None or ""
+    )
 
     #response = api.register_unit("b3cc8d27-6fdc-4509-944b-686bec461974", param)
     #print(response)
 
     searchUnitParam = SearchUnitParam(
         folderId="e28ac22d-a3e8-468e-af3b-fcc743038bb1",
-        workflowId=None,
-        unitId=None)
+        workflowId="",
+        unitId=""
+    )
     
     #response = api.search_unit(searchUnitParam)
     #print(response)

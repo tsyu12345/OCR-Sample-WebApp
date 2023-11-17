@@ -7,7 +7,6 @@ import json
 
 from DXSuite.API import DXSuiteAPI, load_auth_data
 
-
 app = FastAPI()
 
 @app.get("/")

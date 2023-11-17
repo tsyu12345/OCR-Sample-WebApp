@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Final as const, Any, TypedDict
+from typing import Final as const, Optional, Any
 from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-class AuthData(TypedDict):
+class AuthData(BaseModel):
     """_summary_
     DXSuite API の認証情報。Auth.jsonの要素の型定義
     """
@@ -14,8 +15,7 @@ class AuthData(TypedDict):
     expirationDate: str
 
 
-@dataclass
-class WorkFlowSettingData:
+class WorkFlowSettingResponse(BaseModel):
     """_summary\n
     ワークフロー設定取得APIのレスポンスデータ
     """
@@ -28,14 +28,14 @@ class WorkFlowSettingData:
     dataProcessing: bool
     outputcharCode: str
 
-@dataclass
-class SearchWokrFlowResponse:
+
+class SearchWokrFlowResponse(BaseModel):
     workflowId: str
     folderId: str
     name: str
 
 
-class RegisterPOST(TypedDict, total=False):
+class RegisterPOST(BaseModel):
     """
     読み取りユニット登録APIのリクエストボディ\n
     Args:\n
@@ -44,11 +44,11 @@ class RegisterPOST(TypedDict, total=False):
         departmentId* (str): 部門ID\n
     """
     files: list[str]
-    unitName: str
-    departmentId: str
+    unitName: Optional[str]
+    departmentId: Optional[str]
 
-@dataclass
-class RegisterResponse:
+
+class RegisterResponse(BaseModel):
     """
     読み取りユニット登録APIのレスポンスデータ
     """
@@ -56,8 +56,8 @@ class RegisterResponse:
     unitName: str
 
 
-@dataclass
-class SearchUnitParam:
+
+class SearchUnitParam(BaseModel):
     """
     読み取りユニット検索APIのリクエストパラメータ
     folderId, workflowId, unitIdはカンマ区切りで複数指定可能
@@ -69,13 +69,13 @@ class SearchUnitParam:
     #指定したユニットID内を検索する
     unitId: str
     #指定したユニット名内を検索する
-    unitName: str = None
-    status: str = None
-    createdFrom: str = None
-    createdTo: str = None
+    unitName: Optional[str] = None
+    status: Optional[str] = None
+    createdFrom: Optional[str] = None
+    createdTo: Optional[str] = None
 
-@dataclass
-class SearchUnitResponse:
+
+class SearchUnitResponse(BaseModel):
     unitId: str
     unitName: str
     status: int
