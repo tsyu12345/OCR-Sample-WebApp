@@ -4,22 +4,29 @@ import { ref } from 'vue';
 const librarys = ref([
   'Easy OCR', 
   'Paddle OCR', 
-  'Google Cloud Vision'
+  'Google Cloud Vision',
 ]);
 const selected = ref(librarys.value[0]);
+const cameraMode = ref(false);
+const recognitionMode = ref(false);
 
 const changeLibName = (e: Event) => {
   const target = e.target as HTMLAnchorElement;
   selected.value = target.innerText;
 }
 
-
 const takePicture = () => {
   console.log('takePicture');
+  cameraMode.value = true;
+  recognitionMode.value = false;
+  //ネイティブのカメラを起動して写真を撮影する
+  const input = document.createElement('input');
 }
 
 const fileUpload = () => {
   console.log('fileUpload');
+  recognitionMode.value = true;
+  cameraMode.value = false;
 }
 
 </script>
@@ -34,9 +41,6 @@ const fileUpload = () => {
         </li>
         <li class="nav-item">
           <a class="nav-link text-light" href="#">Docs</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" href="#">demo</a>
         </li>
       </ul>
     </header>
@@ -63,9 +67,8 @@ const fileUpload = () => {
           <div id="camera" class="w-fit border border-white rounded mx-auto p-1 px-2 btn-dark" @click="takePicture">
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-camera-fill"
               viewBox="0 0 16 16">
-              <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-              <path
-                d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z" />
+              <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+              <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z" />
             </svg>
             <p class="">カメラから撮影</p>
           </div>
@@ -80,6 +83,9 @@ const fileUpload = () => {
             <p class="">画像から選択</p>
           </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
       </div>
     </div>
   </div>
