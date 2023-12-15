@@ -8,6 +8,7 @@ from requests.models import Response
 import os
 
 from .Interfaces import *
+from ..AbsOCRAPI import AbsOCR
 
 
 class RequestType(Enum):
@@ -18,7 +19,7 @@ class RequestType(Enum):
     PATCH = "PATCH"
 
 
-class DXSuiteAPI:
+class DXSuiteAPI(AbsOCR):
     """
     DXSuiteのAPIを叩くクラス
     APIリファレンス: https://drive.google.com/file/d/1O6bDu07jbzhzVjQ_7XAVHH-AMgzq3XPB/view
@@ -66,8 +67,6 @@ class DXSuiteAPI:
             raise Exception(f"HTTP Status Code: {response.status_code}, \n Error Code : {error_code}, \n Message: {message}")
         
         return response
-
-
 
 
     def get_workflow_setting(self, workflowId: str, revision: int) -> WorkFlowSettingResponse:
@@ -127,7 +126,7 @@ class DXSuiteAPI:
             unitId=data["unitId"],
             unitName=data["unitName"]
         )
-    
+
 
     def download_csv(self, unitId: str, save_path:str=None or "", overwrite:bool=False) -> Any:
         """_summary_
@@ -198,7 +197,8 @@ class DXSuiteAPI:
                     createdAt=d["createdAt"]))
         
         return result
-            
+
+
     def search_workflow(self, folderId: Optional[str], workflowName: Optional[str]) -> list[SearchWokrFlowResponse]:
         """_summary_
         ワークフロー検索API\n
@@ -234,6 +234,24 @@ class DXSuiteAPI:
     def __save_csv(self, path: str, response: Response) -> None:
         with open(path, "w") as f:
             f.write(response.text)
+
+    
+    def read(self, img: str | bytes | bytearray) -> Any:
+        """_summary_
+        画像からOCRを行う関数
+        Args:
+            img (str | bytes | bytearray): 画像ファイルパス or 画像バイナリ
+        Returns:
+            OCRResult: OCR結果
+        """
+        if type(img) != str:
+            raise Exception("[DxSuiteAPi] img must be str")
+        param = RegisterPOST(
+            files=[img],
+            unitName=None,
+            departmentId=None
+        )
+        self.register_unit(param=param)
         
 
 

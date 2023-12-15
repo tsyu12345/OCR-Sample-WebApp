@@ -1,4 +1,4 @@
-from abc import ABCMeta
+from abc import ABC
 from abc import abstractmethod
 from pydantic import BaseModel
 
@@ -6,16 +6,16 @@ from PIL import Image
 
 
 
-class AbsOCRAPI(metaclass = ABCMeta):
+class AbsOCR(ABC):
     """_summary_
     OCR APIの抽象クラス
     """
 
-    def __init__(self,):
+    def __init__(self, Param: BaseModel):
         pass
 
     @abstractmethod
-    def read_img(self, img) -> None:
+    def read(self, img) -> None:
         """
         画像からOCRを行い、結果を返す
         Args:
