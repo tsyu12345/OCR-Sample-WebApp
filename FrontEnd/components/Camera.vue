@@ -1,9 +1,24 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref} from 'vue';
+
+//Props定義
+const props = defineProps({
+    width: {
+        type: String,
+        default: '100%' // デフォルト値
+    },
+    height: {
+        type: String,
+        default: '100%' // デフォルト値
+    },
+    isFullscreen: {
+        type: Boolean,
+        default: false // デフォルトはフルスクリーンでない
+    }
+});
+
 
 const videoElement = ref<HTMLVideoElement | null>(null);
-
-
 const selectedCamera = ref<MediaDeviceInfo | null>(null);
 const availableCameras = ref<MediaDeviceInfo[]>([]);
 
@@ -62,10 +77,10 @@ onMounted(async() => {
 </script>
 
 <template>
-    <div class="">
-        <video id="camera" autoplay muted playsinline class="bg-black w-100 h-100" width="100%" height="100%" ref="videoElement"></video>
-        <div class="row mt-3">
-            <div class="col d-flex justify-content-center align-items-center">
+    <div>
+        <video id="camera" autoplay muted playsinline :style="{ width: props.width, height: props.height, position: props.isFullscreen ? 'fixed' : 'static', top: 0, left: 0, zIndex: props.isFullscreen ? 1000 : 'auto' }" ref="videoElement"></video>
+        <div class="mt-3">
+            <div class="d-flex justify-content-center align-items-center">
                 <button class="rounded-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-record" viewBox="0 0 16 16">
                         <path d="M8 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 1A5 5 0 1 0 8 3a5 5 0 0 0 0 10z"/>

@@ -84,8 +84,10 @@ const fileUpload = () => {
           <PrimeMenuButton text="ファイルを選択" :svg="phtBtnIcon" :onClick="fileUpload" />
         </div>
       </div>
-      <div class="row mt-3" v-if="cameraMode">
-        <Camera />
+      <div class="row mt-3 bg-black" v-if="cameraMode">
+        <transition name="slide-in">
+          <Camera :is-fullscreen="true"/>
+        </transition>
       </div>
     </div>
   </div>
@@ -111,6 +113,14 @@ export default {
 
 .h-screen {
   height: 100vh;
+}
+
+.slide-in-enter-active, .slide-in-leave-active {
+  transition: transform 1.0s;
+}
+
+.slide-in-enter, .slide-in-leave-to /* 初期状態と終了状態 */ {
+  transform: translateY(100%);
 }
 
 </style>
